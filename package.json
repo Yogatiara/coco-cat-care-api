@@ -1,0 +1,19 @@
+{
+  "name": "coco-cat-care-api",
+  "version": "1.0.0",
+  "description": "API penitipan kucing CocoCatCare",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yogatiara/coco-cat-care-api.git"
+  },
+  "author": "Yoga Tiara Wiguna",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yogatiara/coco-cat-care-api/issues"
+  },
+  "homepage": "https://github.com/Yogatiara/coco-cat-care-api#readme"
+}
