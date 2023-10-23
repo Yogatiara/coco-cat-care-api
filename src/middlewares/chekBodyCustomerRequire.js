@@ -1,5 +1,5 @@
 const chekBodyRequire = (req, res, next) => {
-  const { nama, noTelepon } = req.body;
+  const { nama, noTelepon, alamat } = req.body;
   try {
     if (!noTelepon && !nama) {
       return res.status(400).json({
@@ -16,6 +16,11 @@ const chekBodyRequire = (req, res, next) => {
       return res.status(400).json({
         status: 'failed',
         message: 'nama  must be required!',
+      });
+    } else if (!alamat) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'alamat must be required!',
       });
     }
 

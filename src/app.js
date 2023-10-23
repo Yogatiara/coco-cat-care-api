@@ -10,4 +10,11 @@ app.use(morgan('dev'));
 
 app.use(mainRouter);
 
+app.all('*', (req, res) => {
+  return res.status(404).json({
+    status: 'failed',
+    message: 'Route does not exist',
+  });
+});
+
 module.exports = app;
