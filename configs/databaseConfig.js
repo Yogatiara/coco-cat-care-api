@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 const {
   DATABASE_HOST,
@@ -7,14 +7,14 @@ const {
   DATABASE_NAME,
 } = process.env;
 
-const db = mysql.createConnection({
+const mysqlDatabase = mysql.createConnection({
   host: DATABASE_HOST,
   user: DATABASE_USER,
   password: DATABASE_PASSWORD,
   database: DATABASE_NAME,
 });
 
-db.connect((err) => {
+mysqlDatabase.connect((err) => {
   if (err) {
     console.error(
       `Unable to connect to the database: ${err}`
@@ -24,4 +24,4 @@ db.connect((err) => {
   }
 });
 
-module.exports = db;
+module.exports = mysqlDatabase.promise();
