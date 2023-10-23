@@ -9,6 +9,8 @@ router
 
 router
   .route('/:id')
-  .get(servantController.getServantById);
+  .get(servantController.getServantById)
+  .put(servantController.updateServant)
+  .delete(servantController.deleteServant);
 
 module.exports = router;

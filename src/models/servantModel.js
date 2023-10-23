@@ -10,22 +10,36 @@ const create = (nama, noTelepon) => {
   return mysqlDatabase.execute(query);
 };
 
-const findOne = ({
-  idPegawai,
-  noTeleponPegawai,
-}) => {
+const findOne = ({ id, noTelepon }) => {
   let query;
-  if (noTeleponPegawai) {
-    query = `CALL pegawaiManagement('SELECTBYTELEPON', ${null}, ${null}, '${noTeleponPegawai}')`;
-  } else if (idPegawai) {
-    query = `CALL pegawaiManagement('SELECTBYID', ${idPegawai}, '${null}', '${null}')`;
+  if (noTelepon) {
+    query = `CALL pegawaiManagement('SELECTBYTELEPON', ${null}, ${null}, '${noTelepon}')`;
+  } else if (id) {
+    query = `CALL pegawaiManagement('SELECTBYID', ${id}, ${null}, ${null})`;
   }
 
   return mysqlDatabase.execute(query);
 };
 
-const update = (id, noTelepon) => {
-  const query = `CALL pegawaiManagement('UPDATE', ${id}, ${null}, '${noTelepon}')`;
+const update = (id, nama, noTelepon) => {
+  if (!noTelepon) {
+    noTelepon = null;
+  } else if (noTelepon) {
+    noTelepon = `'${noTelepon}'`;
+  }
+
+  if (!nama) {
+    nama = null;
+  } else if (nama) {
+    nama = `'${nama}'`;
+  }
+
+  const query = `CALL pegawaiManagement('UPDATE', ${id}, ${nama}, ${noTelepon})`;
+  return mysqlDatabase.execute(query);
+};
+
+const destroy = (id) => {
+  const query = `CALL pegawaiManagement('DELETE',${id}, ${null},${null})`;
   return mysqlDatabase.execute(query);
 };
 
@@ -34,5 +48,7 @@ module.exports = {
     findAll,
     create,
     findOne,
+    update,
+    destroy,
   },
 };

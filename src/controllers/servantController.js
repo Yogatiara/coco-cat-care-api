@@ -8,7 +8,7 @@ const getServant = async (req, res) => {
     if (noTelepon) {
       const [servantData] = await Servant.findOne(
         {
-          noTeleponPegawai: noTelepon,
+          noTelepon: noTelepon,
         }
       );
 
@@ -43,8 +43,15 @@ const getServantById = async (req, res) => {
 
   try {
     const [servantData] = await Servant.findOne({
-      idPegawai: id,
+      id: id,
     });
+
+    if (servantData[0].length == 0) {
+      return res.status(400).json({
+        status: 'failed',
+        message: `data with id: ${id} is not found`,
+      });
+    }
 
     res.status(200).json({
       status: 'success',
@@ -65,6 +72,7 @@ const insertServant = async (req, res) => {
   const { nama, noTelepon } = req.body;
   try {
     await Servant.create(nama, noTelepon);
+
     const [newServantData] =
       await Servant.findOne({
         noTeleponPegawai: noTelepon,
@@ -79,19 +87,59 @@ const insertServant = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({
-      status: 'faild',
+      status: 'failed',
       message: err.message,
     });
   }
 };
 
 const updateServant = async (req, res) => {
+  const { nama, noTelepon } = req.body;
+  const { id } = req.params;
   try {
-  } catch (err) {}
+    await Servant.update(id, nama, noTelepon);
+
+    const [updatedServantData] =
+      await Servant.findOne({
+        id: id,
+      });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'data is added successfully',
+      data: {
+        Servants: updatedServantData[0],
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'failed',
+      message: err.message,
+    });
+  }
+};
+
+const deleteServant = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Servant.destroy(id);
+
+    res.status(200).json({
+      status: 'success',
+      message: `data with id:${id} is deleted successfully`,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'failed',
+      message: err.message,
+    });
+  }
 };
 
 module.exports = {
   getServant,
   insertServant,
   getServantById,
+  updateServant,
+  deleteServant,
 };
