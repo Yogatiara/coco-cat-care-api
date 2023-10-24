@@ -10,6 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(morgan('dev'));
 
+app.use(mainRouter);
 app.all('*', (req, res, next) => {
   next(
     new ErrorHandler(
@@ -20,6 +21,5 @@ app.all('*', (req, res, next) => {
 });
 
 app.use(errorHandler);
-app.use(mainRouter);
 
 module.exports = app;

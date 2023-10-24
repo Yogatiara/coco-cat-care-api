@@ -1,22 +1,29 @@
+const ErrorHandler = require('../utils/ErrorHandler');
+
 const chekBodyRequire = (req, res, next) => {
   const { nama, noTelepon } = req.body;
   try {
     if (!noTelepon && !nama) {
-      return res.status(400).json({
-        status: 'failed',
-        message:
+      next(
+        new ErrorHandler(
           'name and telepon must be required!',
-      });
+          400
+        )
+      );
     } else if (!noTelepon) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'noTelepon must be required!',
-      });
+      next(
+        new ErrorHandler(
+          'noTelepon and telepon must be required!',
+          400
+        )
+      );
     } else if (!nama) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'nama  must be required!',
-      });
+      next(
+        new ErrorHandler(
+          'nama must be required!',
+          400
+        )
+      );
     }
 
     next();
