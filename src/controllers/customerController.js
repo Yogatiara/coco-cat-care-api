@@ -31,10 +31,7 @@ const getCustomer = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: err.message,
-    });
+    next(new ErrorHandler(err.message, 500));
   }
 };
 
@@ -49,10 +46,12 @@ const getCustomerById = async (req, res) => {
     );
 
     if (customerData[0].length == 0) {
-      return res.status(400).json({
-        status: 'failed',
-        message: `data with id: ${id} is not found`,
-      });
+      next(
+        new ErrorHandler(
+          `data with id: ${id} is not found`,
+          404
+        )
+      );
     }
 
     res.status(200).json({
@@ -63,10 +62,7 @@ const getCustomerById = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: err.message,
-    });
+    next(new ErrorHandler(err.message, 500));
   }
 };
 
@@ -92,10 +88,7 @@ const insertCustomer = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: err.message,
-    });
+    next(new ErrorHandler(err.message, 500));
   }
 };
 
@@ -118,10 +111,7 @@ const updateCustomer = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: err.message,
-    });
+    next(new ErrorHandler(err.message, 500));
   }
 };
 
@@ -135,10 +125,7 @@ const deleteCustomer = async (req, res) => {
       message: `data with id:${id} is deleted successfully`,
     });
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: err.message,
-    });
+    next(new ErrorHandler(err.message, 500));
   }
 };
 

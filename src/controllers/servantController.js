@@ -31,10 +31,7 @@ const getServant = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: err.message,
-    });
+    next(new ErrorHandler(err.message, 500));
   }
 };
 
@@ -47,10 +44,12 @@ const getServantById = async (req, res) => {
     });
 
     if (servantData[0].length == 0) {
-      return res.status(400).json({
-        status: 'failed',
-        message: `data with id: ${id} is not found`,
-      });
+      next(
+        new ErrorHandler(
+          `data with id: ${id} is not found`,
+          500
+        )
+      );
     }
 
     res.status(200).json({
@@ -61,10 +60,7 @@ const getServantById = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: err.message,
-    });
+    next(new ErrorHandler(err.message, 500));
   }
 };
 
@@ -86,10 +82,7 @@ const insertServant = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: err.message,
-    });
+    next(new ErrorHandler(err.message, 500));
   }
 };
 
@@ -112,10 +105,7 @@ const updateServant = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: err.message,
-    });
+    next(new ErrorHandler(err.message, 500));
   }
 };
 
@@ -129,10 +119,7 @@ const deleteServant = async (req, res) => {
       message: `data with id:${id} is deleted successfully`,
     });
   } catch (err) {
-    res.status(500).json({
-      status: 'failed',
-      message: err.message,
-    });
+    next(new ErrorHandler(err.message, 500));
   }
 };
 
