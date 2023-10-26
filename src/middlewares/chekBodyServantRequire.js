@@ -4,21 +4,21 @@ const chekBodyRequire = (req, res, next) => {
   const { nama, noTelepon } = req.body;
   try {
     if (!noTelepon && !nama) {
-      next(
+      return next(
         new ErrorHandler(
           'name and telepon must be required!',
           400
         )
       );
     } else if (!noTelepon) {
-      next(
+      return next(
         new ErrorHandler(
-          'noTelepon and telepon must be required!',
+          'noTelepon  must be required!',
           400
         )
       );
     } else if (!nama) {
-      next(
+      return next(
         new ErrorHandler(
           'nama must be required!',
           400

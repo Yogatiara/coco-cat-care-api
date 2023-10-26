@@ -1,8 +1,11 @@
+const ErrorHandler = require('../utils/ErrorHandler');
+
 const {
   Servant,
 } = require('../models/servantModel');
+// const { Cat } = require('../models/catModel');
 
-const getServant = async (req, res) => {
+const getServant = async (req, res, next) => {
   const { noTelepon } = req.query;
   try {
     if (noTelepon) {
@@ -35,7 +38,7 @@ const getServant = async (req, res) => {
   }
 };
 
-const getServantById = async (req, res) => {
+const getServantById = async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -44,7 +47,7 @@ const getServantById = async (req, res) => {
     });
 
     if (servantData[0].length == 0) {
-      next(
+      return next(
         new ErrorHandler(
           `data with id: ${id} is not found`,
           500
@@ -64,17 +67,17 @@ const getServantById = async (req, res) => {
   }
 };
 
-const insertServant = async (req, res) => {
+const insertServant = async (req, res, next) => {
   const { nama, noTelepon } = req.body;
   try {
     await Servant.create(nama, noTelepon);
 
     const [newServantData] =
       await Servant.findOne({
-        noTeleponPegawai: noTelepon,
+        noTelepon: noTelepon,
       });
 
-    res.status(200).json({
+    res.status(201).json({
       status: 'success',
       message: 'data is added successfully',
       data: {
@@ -86,20 +89,31 @@ const insertServant = async (req, res) => {
   }
 };
 
-const updateServant = async (req, res) => {
+const updateServant = async (req, res, next) => {
   const { nama, noTelepon } = req.body;
   const { id } = req.params;
   try {
-    await Servant.update(id, nama, noTelepon);
-
     const [updatedServantData] =
       await Servant.findOne({
         id: id,
       });
 
+    console.log(updatedServantData);
+
+    if (updatedServantData[0].length == 0) {
+      return next(
+        new ErrorHandler(
+          `data with id: ${id} is not found`,
+          404
+        )
+      );
+    }
+
+    await Servant.update(id, nama, noTelepon);
+
     res.status(200).json({
       status: 'success',
-      message: 'data is added successfully',
+      message: 'data is updated successfully',
       data: {
         Servants: updatedServantData[0],
       },
@@ -109,7 +123,7 @@ const updateServant = async (req, res) => {
   }
 };
 
-const deleteServant = async (req, res) => {
+const deleteServant = async (req, res, next) => {
   const { id } = req.params;
   try {
     await Servant.destroy(id);

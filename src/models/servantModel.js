@@ -2,6 +2,7 @@ const mysqlDatabase = require('../../configs/databaseConfig');
 
 const findAll = () => {
   const query = `CALL pegawaiManagement('SELECTALL', ${null}, ${null}, ${null})`;
+
   return mysqlDatabase.execute(query);
 };
 

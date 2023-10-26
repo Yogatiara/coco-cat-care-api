@@ -1,8 +1,12 @@
+const ErrorHandler = require('../utils/ErrorHandler');
+
 const {
   Customer,
 } = require('../models/customerModel');
 
-const getCustomer = async (req, res) => {
+const { Cat } = require('../models/catModel');
+
+const getCustomer = async (req, res, next) => {
   const { noTelepon } = req.query;
   try {
     if (noTelepon) {
@@ -27,7 +31,7 @@ const getCustomer = async (req, res) => {
       status: 'success',
       message: 'data is displayed successfully',
       data: {
-        Customers: customerData[0],
+        Customers: customerData,
       },
     });
   } catch (err) {
@@ -35,7 +39,11 @@ const getCustomer = async (req, res) => {
   }
 };
 
-const getCustomerById = async (req, res) => {
+const getCustomerById = async (
+  req,
+  res,
+  next
+) => {
   const { id } = req.params;
 
   try {
@@ -46,7 +54,7 @@ const getCustomerById = async (req, res) => {
     );
 
     if (customerData[0].length == 0) {
-      next(
+      return next(
         new ErrorHandler(
           `data with id: ${id} is not found`,
           404
@@ -66,7 +74,7 @@ const getCustomerById = async (req, res) => {
   }
 };
 
-const insertCustomer = async (req, res) => {
+const insertCustomer = async (req, res, next) => {
   const { nama, noTelepon, alamat } = req.body;
   try {
     await Customer.create(
@@ -80,7 +88,7 @@ const insertCustomer = async (req, res) => {
         noTelepon: noTelepon,
       });
 
-    res.status(200).json({
+    res.status(201).json({
       status: 'success',
       message: 'data is added successfully',
       data: {
@@ -92,16 +100,25 @@ const insertCustomer = async (req, res) => {
   }
 };
 
-const updateCustomer = async (req, res) => {
+const updateCustomer = async (req, res, next) => {
   const { nama, noTelepon } = req.body;
   const { id } = req.params;
   try {
-    await Customer.update(id, nama, noTelepon);
-
     const [updatedCustomerData] =
       await Customer.findOne({
         id: id,
       });
+
+    if (updatedCustomerData[0].length == 0) {
+      return next(
+        new ErrorHandler(
+          `data with id: ${id} is not found`,
+          404
+        )
+      );
+    }
+
+    await Customer.update(id, nama, noTelepon);
 
     res.status(200).json({
       status: 'success',
@@ -115,7 +132,7 @@ const updateCustomer = async (req, res) => {
   }
 };
 
-const deleteCustomer = async (req, res) => {
+const deleteCustomer = async (req, res, next) => {
   const { id } = req.params;
   try {
     await Customer.destroy(id);
