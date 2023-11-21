@@ -85,12 +85,19 @@ const insertMemberCard = async (
         diskon: diskon,
       });
 
+
     res.status(201).json({
       status: 'success',
       message: 'data is added successfully',
       data: {
         MemberCards: newMemberCardData[0],
       },
+    });
+
+    res.status(201).json({
+      status: 'success',
+      message: 'data is added successfully',
+     
     });
   } catch (err) {
     next(new ErrorHandler(err.message, 500));
