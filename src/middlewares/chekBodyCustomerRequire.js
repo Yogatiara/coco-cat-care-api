@@ -1,38 +1,30 @@
 const chekBodyRequire = (req, res, next) => {
   const { nama, noTelepon, alamat } = req.body;
-
-  const body = [nama, noTelepon, alamat];
-
-  for(let i = 0; i < body.length; i++) {
-    if(!body[i]) {
-      
-    }
-  }
   try {
     if (!noTelepon && !nama) {
+      return sendBadRequest(res, 'name and telepon must be required!');
+    }
+    
+    if (!noTelepon) {
+      return sendBadRequest(res, 'noTelepon must be required!');
+    }
+    
+    if (!nama) {
+      return sendBadRequest(res, 'nama must be required!');
+    }
+    
+    if (!alamat) {
+      return sendBadRequest(res, 'alamat must be required!');
+    }
+    
+    next();
+    
+    const sendBadRequest = (res, message) => {
       return res.status(400).json({
         status: 'failed',
-        message:
-          'name and telepon must be required!',
-      });
-    } else if (!noTelepon) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'noTelepon must be required!',
-      });
-    } else if (!nama) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'nama  must be required!',
-      });
-    } else if (!alamat) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'alamat must be required!',
+        message,
       });
     }
-
-    next();
   } catch (err) {
     res.status(500).json({
       status: 'failed',

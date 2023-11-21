@@ -4,7 +4,7 @@ const {
   Customer,
 } = require('../models/customerModel');
 
-// const { Cat } = require('../models/catModel');
+const { Cat } = require('../models/catModel');
 
 const getCustomer = async (req, res, next) => {
   const { noTelepon } = req.query;
@@ -52,7 +52,7 @@ const getCustomer = async (req, res, next) => {
       status: 'success',
       message: 'data is displayed successfully',
       data: {
-        Customers: customerData,
+        Customers: customerData[0],
       },
     });
   } catch (err) {
@@ -96,13 +96,20 @@ const getCustomerById = async (
 };
 
 const insertCustomer = async (req, res, next) => {
-  const { nama, noTelepon, alamat } = req.body;
+  const { nama, noTelepon, alamat,ras, umur, jenisKelamin } = req.body;
   try {
     await Customer.create(
       nama,
       noTelepon,
       alamat
     );
+
+    await Cat.create(
+      nama,
+      ras,
+      umur,
+      jenisKelamin
+    )
 
     const [newCustomerData] =
       await Customer.findOne({
@@ -125,21 +132,22 @@ const updateCustomer = async (req, res, next) => {
   const { nama, noTelepon } = req.body;
   const { id } = req.params;
   try {
-    const [updatedCustomerData] =
-      await Customer.findOne({
-        id: id,
-      });
-
-    if (updatedCustomerData[0].length == 0) {
-      return next(
-        new ErrorHandler(
-          `data with id: ${id} is not found`,
-          404
-        )
-      );
-    }
-
+  
     await Customer.update(id, nama, noTelepon);
+
+    const [updatedCustomerData] =
+    await Customer.findOne({
+      id: id,
+    });
+
+  if (updatedCustomerData[0].length == 0) {
+    return next(
+      new ErrorHandler(
+        `data with id: ${id} is not found`,
+        404
+      )
+    );
+  }
 
     res.status(200).json({
       status: 'success',
@@ -156,6 +164,18 @@ const updateCustomer = async (req, res, next) => {
 const deleteCustomer = async (req, res, next) => {
   const { id } = req.params;
   try {
+    const [customerData] = await Customer.findOne({
+      id: id,
+    });
+
+    if (customerData[0].length == 0) {
+      return next(
+        new ErrorHandler(
+          `data with id: ${id} is not found`,
+          404
+        )
+      );
+    }
     await Customer.destroy(id);
 
     res.status(200).json({
