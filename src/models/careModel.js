@@ -1,23 +1,18 @@
 const mysqlDatabase = require("../../configs/databaseConfig");
 
 const findAll = () => {
-  const query = `CALL pegawaiManagement('SELECTALL', ${null}, ${null}, ${null})`;
+  const query = `CALL penitipanManagement('SELECTALL',  ${null}, ${null}, ${null}, ${null}, ${null})`;
 
   return mysqlDatabase.execute(query);
 };
 
-const create = (nama, noTelepon) => {
-  const query = `CALL pegawaiManagement('INSERT',${null}, '${nama}', '${noTelepon}')`;
+const create = (idPelanggan, currentDate, tanggalAkhir, hargaPerHari) => {
+  const query = `CALL penitipanManagement('INSERT',${null}, ${idPelanggan}, '${currentDate}', '${tanggalAkhir}', ${hargaPerHari})`;
   return mysqlDatabase.execute(query);
 };
 
-const findOne = ({ id, noTelepon }) => {
-  const query = noTelepon
-    ? `CALL pegawaiManagement('SELECTBYTELEPON', null, null, '${noTelepon}')`
-    : id
-    ? `CALL pegawaiManagement('SELECTBYID', ${id}, null, null)`
-    : "";
-
+const findOne = ({ id }) => {
+  const query = `CALL penitipanManagement('SELECTBYID', ${id},  ${null}, ${null}, ${null}, ${null})`;
   return mysqlDatabase.execute(query);
 };
 
@@ -43,7 +38,7 @@ const destroy = (id) => {
 };
 
 module.exports = {
-  Servant: {
+  Care: {
     findAll,
     create,
     findOne,

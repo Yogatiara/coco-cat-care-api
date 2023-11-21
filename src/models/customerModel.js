@@ -1,29 +1,27 @@
-const mysqlDatabase = require('../../configs/databaseConfig');
+const mysqlDatabase = require("../../configs/databaseConfig");
 
 const findAll = () => {
-  const query = `CALL pelangganManagement('SELECTALL', ${null}, ${null}, ${null}, ${null})`;
-  // const query =
-  //   'SELECT * FROM pelangganDanKucing';
+  const query = `CALL pelangganManagement('SELECTALL', ${null}, ${null}, ${null}, ${null}, ${null})`;
   return mysqlDatabase.execute(query);
 };
 
 const create = (nama, noTelepon, alamat) => {
-  const query = `CALL pelangganManagement('INSERT',${null}, '${nama}', '${noTelepon}', '${alamat}')`;
+  const query = `CALL pelangganManagement('INSERT',${null},${null}, '${nama}', '${noTelepon}', '${alamat}')`;
   return mysqlDatabase.execute(query);
 };
 
 const findOne = ({ id, noTelepon }) => {
   let query;
   if (noTelepon) {
-    query = `CALL pelangganManagement('SELECTBYTELEPON', ${null}, ${null}, '${noTelepon}', ${null})`;
+    query = `CALL pelangganManagement('SELECTBYTELEPON', ${null}, ${null}, ${null}, '${noTelepon}', ${null})`;
   } else if (id) {
-    query = `CALL pelangganManagement('SELECTBYID', ${id}, ${null}, ${null}, ${null})`;
+    query = `CALL pelangganManagement('SELECTBYID', ${id}, ${null}, ${null}, ${null}, ${null})`;
   }
 
   return mysqlDatabase.execute(query);
 };
 
-const update = (id, nama, noTelepon, alamat) => {
+const update = (id, nama, noTelepon, alamat, idKartuMember) => {
   if (!noTelepon) {
     noTelepon = null;
   } else if (noTelepon) {
@@ -42,12 +40,18 @@ const update = (id, nama, noTelepon, alamat) => {
     alamat = `'${alamat}'`;
   }
 
-  const query = `CALL pelangganManagement('UPDATE', ${id}, ${nama}, ${noTelepon},  ${alamat})`;
+  if (!idKartuMember) {
+    idKartuMember = null;
+  } else if (alamat) {
+    idKartuMember = idKartuMember;
+  }
+
+  const query = `CALL pelangganManagement('UPDATE', ${id}, ${idKartuMember} ,${nama}, ${noTelepon},  ${alamat})`;
   return mysqlDatabase.execute(query);
 };
 
 const destroy = (id) => {
-  const query = `CALL pelangganManagement('DELETE',${id}, ${null},${null}, ${null})`;
+  const query = `CALL pelangganManagement('DELETE',${id},${null}, ${null},${null}, ${null})`;
   return mysqlDatabase.execute(query);
 };
 
