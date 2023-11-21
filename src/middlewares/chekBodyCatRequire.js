@@ -1,5 +1,5 @@
 const chekBodyRequire = (req, res, next) => {
-  const { nama, ras, umur, jenisKelamin } =
+  const { nama, ras, umur, jenisKelamin, idPelanggan } =
     req.body;
   try {
     if (!jenisKelamin && !nama) {
@@ -21,6 +21,11 @@ const chekBodyRequire = (req, res, next) => {
       return res.status(400).json({
         status: 'failed',
         message: 'ras must be required!',
+      });
+    }else if (!idPelanggan) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'idPelanggan must be required!',
       });
     }
 

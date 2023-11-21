@@ -10,9 +10,9 @@ const getCat = async (req, res, next) => {
     lessThanUmur,
   } = req.query;
   try {
-    if (jenisKelamin && moreThanUmur) {
+    if (jenisKelamin && umur) {
       const [catData] = await Cat.findOne({
-        moreThanUmur: moreThanUmur,
+        umur: umur,
         jenisKelamin: jenisKelamin,
       });
 
@@ -27,36 +27,36 @@ const getCat = async (req, res, next) => {
 
       return res.status(200).json({
         status: 'success',
-        message: `Cat with sex ${jenisKelamin} and age more than ${moreThanUmur} is displayed succesfully`,
+        message: `Cat with sex ${jenisKelamin} and age  ${umur} is displayed succesfully`,
         data: {
           Cats: catData[0],
         },
       });
-    } else if (jenisKelamin && lessThanUmur) {
-      const [catData] = await Cat.findOne({
-        lessThanUmur: lessThanUmur,
-        jenisKelamin: jenisKelamin,
-      });
+    // } else if (jenisKelamin && lessThanUmur) {
+    //   const [catData] = await Cat.findOne({
+    //     lessThanUmur: lessThanUmur,
+    //     jenisKelamin: jenisKelamin,
+    //   });
 
-      if (catData[0].length == 0) {
-        return next(
-          new ErrorHandler(
-            `data is not found!`,
-            404
-          )
-        );
-      }
+    //   if (catData[0].length == 0) {
+    //     return next(
+    //       new ErrorHandler(
+    //         `data is not found!`,
+    //         404
+    //       )
+    //     );
+    //   }
 
-      return res.status(200).json({
-        status: 'success',
-        message: `Cat with sex ${jenisKelamin} and age less than ${lessThanUmur} is displayed succesfully`,
-        data: {
-          Cats: catData[0],
-        },
-      });
+    //   return res.status(200).json({
+    //     status: 'success',
+    //     message: `Cat with sex ${jenisKelamin} and age less than ${lessThanUmur} is displayed succesfully`,
+    //     data: {
+    //       Cats: catData[0],
+    //     },
+    //   });
     } else if (umur) {
       const [catData] = await Cat.findOne({
-        jenisKelamin: jenisKelamin,
+        umur: umur,
       });
 
       if (catData[0].length == 0) {
@@ -142,10 +142,10 @@ const getCatById = async (req, res, next) => {
 };
 
 const insertCat = async (req, res, next) => {
-  const { ras, nama, umur, jenisKelamin } =
+  const { ras, nama, umur, jenisKelamin,idPelanggan } =
     req.body;
-
   try {
+    console.log(idPelanggan)
     if (typeof umur != 'number') {
       return next(
         new ErrorHandler(
@@ -155,6 +155,7 @@ const insertCat = async (req, res, next) => {
       );
     }
     await Cat.create(
+      idPelanggan,
       nama,
       umur,
       ras,
@@ -164,6 +165,8 @@ const insertCat = async (req, res, next) => {
     const [newCatData] = await Cat.findOne({
       nama: nama,
     });
+
+    console.log(newCatData)
 
     res.status(200).json({
       status: 'success',
@@ -182,6 +185,25 @@ const updateCat = async (req, res, next) => {
     req.body;
   const { id } = req.params;
   try {
+
+
+    // if (typeof umur != 'number') {
+    //   return next(
+    //     new ErrorHandler(
+    //       'Age data must be a number ',
+    //       404
+    //     )
+    //   );
+    // }
+
+    await Cat.update(
+      id,
+      nama,
+      ras,
+      umur,
+      jenisKelamin
+    );
+
     const [updatedCatData] = await Cat.findOne({
       id: id,
     });
@@ -197,26 +219,9 @@ const updateCat = async (req, res, next) => {
       );
     }
 
-    if (typeof umur != 'number') {
-      return next(
-        new ErrorHandler(
-          'Age data must be a number ',
-          404
-        )
-      );
-    }
-
-    await Cat.update(
-      id,
-      nama,
-      ras,
-      umur,
-      jenisKelamin
-    );
-
     res.status(200).json({
       status: 'success',
-      message: 'data is added successfully',
+      message: 'data is update successfully',
       data: {
         Cats: updatedCatData[0],
       },
