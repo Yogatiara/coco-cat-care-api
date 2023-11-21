@@ -12,30 +12,27 @@ const create = (nama, noTelepon) => {
 };
 
 const findOne = ({ id, noTelepon }) => {
-  let query;
-  if (noTelepon) {
-    query = `CALL pegawaiManagement('SELECTBYTELEPON', ${null}, ${null}, '${noTelepon}')`;
-  } else if (id) {
-    query = `CALL pegawaiManagement('SELECTBYID', ${id}, ${null}, ${null})`;
-  }
+  const query = noTelepon
+    ? `CALL pegawaiManagement('SELECTBYTELEPON', null, null, '${noTelepon}')`
+    : id
+    ? `CALL pegawaiManagement('SELECTBYID', ${id}, null, null)`
+    : '';
 
   return mysqlDatabase.execute(query);
 };
 
+
 const update = (id, nama, noTelepon) => {
   if (!noTelepon) {
     noTelepon = null;
-  } else if (noTelepon) {
-    noTelepon = `'${noTelepon}'`;
   }
 
   if (!nama) {
     nama = null;
-  } else if (nama) {
-    nama = `'${nama}'`;
   }
 
-  const query = `CALL pegawaiManagement('UPDATE', ${id}, ${nama}, ${noTelepon})`;
+  const query = `CALL pegawaiManagement('UPDATE', ${id}, ${nama !== null ? `'${nama}'` : null}, ${noTelepon !== null ? `'${noTelepon}'` : null})`;
+
   return mysqlDatabase.execute(query);
 };
 

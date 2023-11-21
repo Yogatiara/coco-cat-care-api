@@ -15,6 +15,8 @@ const getServant = async (req, res, next) => {
         }
       );
 
+      console.log(servantData[0])
+
       return res.status(200).json({
         status: 'success',
         message: `User with phone number: ${noTelepon} displayed successfully`,
@@ -93,23 +95,23 @@ const updateServant = async (req, res, next) => {
   const { nama, noTelepon } = req.body;
   const { id } = req.params;
   try {
-    const [updatedServantData] =
-      await Servant.findOne({
-        id: id,
-      });
-
-    console.log(updatedServantData);
-
-    if (updatedServantData[0].length == 0) {
-      return next(
-        new ErrorHandler(
-          `data with id: ${id} is not found`,
-          404
-        )
-      );
-    }
+ 
 
     await Servant.update(id, nama, noTelepon);
+
+    const [updatedServantData] =
+    await Servant.findOne({
+      id: id,
+    });
+
+  if (updatedServantData[0].length == 0) {
+    return next(
+      new ErrorHandler(
+        `data with id: ${id} is not found`,
+        404
+      )
+    );
+  }
 
     res.status(200).json({
       status: 'success',
@@ -126,6 +128,19 @@ const updateServant = async (req, res, next) => {
 const deleteServant = async (req, res, next) => {
   const { id } = req.params;
   try {
+    const [servantData] = await Servant.findOne({
+      id: id,
+    });
+
+    if (servantData[0].length == 0) {
+      return next(
+        new ErrorHandler(
+          `data with id: ${id} is not found`,
+          404
+        )
+      );
+    }
+    
     await Servant.destroy(id);
 
     res.status(200).json({

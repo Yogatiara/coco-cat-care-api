@@ -4,7 +4,7 @@ const {
   Customer,
 } = require('../models/customerModel');
 
-const { Cat } = require('../models/catModel');
+// const { Cat } = require('../models/catModel');
 
 const getCustomer = async (req, res, next) => {
   const { noTelepon } = req.query;
@@ -15,6 +15,15 @@ const getCustomer = async (req, res, next) => {
           noTelepon: noTelepon,
         });
 
+        if (customerData[0].length == 0) {
+          return next(
+            new ErrorHandler(
+              `data is not found!`,
+              404
+            )
+          );
+        }
+
       return res.status(200).json({
         status: 'success',
         message: `User with phone number: ${noTelepon} displayed successfully`,
@@ -24,8 +33,20 @@ const getCustomer = async (req, res, next) => {
       });
     }
 
+
+
     const [customerData] =
       await Customer.findAll();
+
+    if (customerData[0].length == 0) {
+      return next(
+        new ErrorHandler(
+          `data is not found!`,
+          404
+        )
+      );
+
+    }
 
     res.status(200).json({
       status: 'success',

@@ -1,5 +1,13 @@
 const chekBodyRequire = (req, res, next) => {
   const { nama, noTelepon, alamat } = req.body;
+
+  const body = [nama, noTelepon, alamat];
+
+  for(let i = 0; i < body.length; i++) {
+    if(!body[i]) {
+      
+    }
+  }
   try {
     if (!noTelepon && !nama) {
       return res.status(400).json({
