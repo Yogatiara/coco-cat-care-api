@@ -1,7 +1,7 @@
 const router = require("express").Router();
 
 const careController = require("../controllers/careController");
-// const chekBodyRequire = require('../middlewares/chekBodyCatRequire');
+const chekBodyRequire = require("../middlewares/checkBodyCareRequire");
 
 router.route("/").get(careController.getCare).post(careController.insertCare);
 

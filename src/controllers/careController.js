@@ -1,6 +1,7 @@
 const ErrorHandler = require("../utils/ErrorHandler");
 
 const { Care } = require("../models/careModel");
+const { Cat } = require("../models/catModel");
 
 const getCare = async (req, res, next) => {
   try {
@@ -43,7 +44,16 @@ const getCareById = async (req, res, next) => {
 };
 
 const insertCare = async (req, res, next) => {
-  const { idPelanggan, tanggalAkhir, hargaPerHari } = req.body;
+  const {
+    idPelanggan,
+    tanggalAkhir,
+    hargaPerHari,
+    ras,
+    namaKucing,
+    umurKucing,
+    jenisKelamin,
+  } = req.body;
+
   try {
     const pad = (number) => {
       if (number < 10) {
@@ -66,6 +76,14 @@ const insertCare = async (req, res, next) => {
 
     await Care.create(idPelanggan, tanggalFormatted, tanggalAkhir, harga);
 
+    await Cat.create({
+      idPelanggan: idPelanggan,
+      nama: namaKucing,
+      ras: ras,
+      umur: umurKucing,
+      jenisKelamin: jenisKelamin,
+    });
+
     res.status(201).json({
       status: "success",
       message: "data is added successfully",
@@ -76,10 +94,15 @@ const insertCare = async (req, res, next) => {
 };
 
 const updateCare = async (req, res, next) => {
-  const { nama, noTelepon } = req.body;
+  const { tanggalAkhir, hargaPerHari } = req.body;
   const { id } = req.params;
   try {
-    await Care.update(id, nama, noTelepon);
+    let harga = hargaPerHari;
+    if (!hargaPerHari) {
+      harga = 60000;
+    }
+
+    await Care.update(id, tanggalAkhir, harga);
 
     const [updatedCareData] = await Care.findOne({
       id: id,

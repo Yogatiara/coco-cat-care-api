@@ -21,7 +21,7 @@ const findOne = ({ id, noTelepon }) => {
   return mysqlDatabase.execute(query);
 };
 
-const update = (id, nama, noTelepon, alamat, idKartuMember) => {
+const update = (id, idKartuMember, nama, noTelepon, alamat) => {
   if (!noTelepon) {
     noTelepon = null;
   } else if (noTelepon) {

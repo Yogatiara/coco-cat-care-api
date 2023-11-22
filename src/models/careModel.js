@@ -16,24 +16,22 @@ const findOne = ({ id }) => {
   return mysqlDatabase.execute(query);
 };
 
-const update = (id, nama, noTelepon) => {
-  if (!noTelepon) {
-    noTelepon = null;
+const update = (id, tanggalAkhir, hargaPerHari) => {
+  if (!tanggalAkhir) {
+    tanggalAkhir = null;
+  } else if (tanggalAkhir) {
+    tanggalAkhir = `'${tanggalAkhir}'`;
   }
 
-  if (!nama) {
-    nama = null;
-  }
+  console.log(hargaPerHari);
 
-  const query = `CALL pegawaiManagement('UPDATE', ${id}, ${
-    nama !== null ? `'${nama}'` : null
-  }, ${noTelepon !== null ? `'${noTelepon}'` : null})`;
+  const query = `CALL penitipanManagement('UPDATE', ${id}, ${null}, ${null},${tanggalAkhir}, ${hargaPerHari})`;
 
   return mysqlDatabase.execute(query);
 };
 
 const destroy = (id) => {
-  const query = `CALL pegawaiManagement('DELETE',${id}, ${null},${null})`;
+  const query = `CALL penitipanManagement('DELETE',${id}, ${null},${null}, ${null}, ${null})`;
   return mysqlDatabase.execute(query);
 };
 

@@ -1,18 +1,12 @@
-const mysqlDatabase = require('../../configs/databaseConfig');
+const mysqlDatabase = require("../../configs/databaseConfig");
 
 const findAll = () => {
   const query = `CALL kucingManagement('SELECTALL', ${null}, ${null}, ${null}, ${null}, ${null}, ${null})`;
   return mysqlDatabase.execute(query);
 };
 
-const create = (
-  idPelanggan,
-  nama,
-  ras,
-  umur,
-  jenisKelamin
-) => {
-  const query = `CALL kucingManagement('INSERT',${null}, ${idPelanggan},'${nama}', '${umur}', '${ras}', '${jenisKelamin}')`;
+const create = ({ idPelanggan, nama, ras, umur, jenisKelamin }) => {
+  const query = `CALL kucingManagement('INSERT',${null}, ${idPelanggan},'${nama}', '${ras}', ${umur}, '${jenisKelamin}')`;
   return mysqlDatabase.execute(query);
 };
 
@@ -42,20 +36,12 @@ const findOne = ({
     query = `CALL kucingManagement('SELECTBYJENISKELAMIN', ${null}, ${null}, ${null}, ${null}, ${null},'${jenisKelamin}')`;
   } else if (nama) {
     query = `CALL kucingManagement('SELECTBYNAMA', ${null}, ${null}, '${nama}', ${null}, ${null}, ${null})`;
-  } 
-  
+  }
 
   return mysqlDatabase.execute(query);
 };
 
-const update = (
-  id,
-  nama,
-  ras,
-  umur,
-  jenisKelamin,
-  idPelanggan
-) => {
+const update = (id, nama, ras, umur, jenisKelamin, idPelanggan) => {
   if (!nama) {
     nama = null;
   } else if (nama) {
@@ -83,10 +69,10 @@ const update = (
   if (!idPelanggan) {
     idPelanggan = null;
   } else if (idPelanggan) {
-    idPelanggan =  `${idPelanggan}`;
+    idPelanggan = `${idPelanggan}`;
   }
 
-  console.log(id)
+  console.log(id);
 
   const query = `CALL kucingManagement('UPDATE', ${id}, ${idPelanggan}, ${nama}, ${ras},  ${umur}, ${jenisKelamin})`;
   return mysqlDatabase.execute(query);
